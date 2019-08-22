@@ -130,7 +130,12 @@ def QGL():
         pass
     # There is no entry for the current OpenGL context in our cache.  Acquire, cache, and return a
     # Qt.QOpenGLVersionFunctions object.
-    QGL = context.versionFunctions()
+    try:
+        QGL = context.versionFunctions()
+    except ModuleNotFoundError:
+        # In some cases, PyQt throws a ModuleNotFoundError in lieu of returning a None when a specified version profile can't be found
+        QGL = None
+
     if QGL is None:
         # Some platforms seem to need version profile specification
         vp = Qt.QOpenGLVersionProfile()
